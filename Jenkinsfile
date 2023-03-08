@@ -22,24 +22,6 @@ pipeline {
                 }
             }
         }
-        stage('Test') {
-            steps {
-                withsonarQubeEnv(){
-                sh 'mvn sonar:sonar'
-                }
-            }
-            post {
-                always {
-                    junit 'target/*.xml'
-                }
-            }
-        }
-      
-          stage('Build Docker image and push'){
-            steps{
-               withCredentials([])
-               sh docker build -t images:$BUILDNUM .
-               sh docker push $BUILDimage:$BUILDNUM
-        }
+        
     }
 }
