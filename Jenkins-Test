@@ -17,7 +17,7 @@ pipeline {
                 script{
                     sh '''
                     echo 'building with maven'
-                    mvn clean install --file *.pom
+                    mvn clean install
                     '''
                 }
             }
