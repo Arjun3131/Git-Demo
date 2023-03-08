@@ -1,34 +1,45 @@
 pipeline {
-    agent any
-    environment{
-      TAG = getdockertag()
-    }
+    
+    agent any 
+    
+    stages {
+        
+        stage('SCM Checkout'){
+           steps {
+                git credentialsId: '1d874a1e-a28f-429e-b5bc-418685dca2dd', 
+                url: 'https://github.com/Arjun3131/Jenkinsflow.git',
+                branch: 'main'
+           }
+        }
 
-    stages{
-        stage('Clone repository'){
-            steps {
-        git 'https://github.com/nagarjuna-nani/Git-Demo.git'
-        checkout scm 
-            }
-    }    
-        stage('Build image'){
-            steps {
-        sh label: '', script: 'docker build . -t docker797/deployimage:${TAG}'
-  
-            }
-    }       
-        stage('push image'){
+        stage('Build'){
             steps{
-        withCredentials([string(credentialsId: 'docker-new', variable: 'newone')])  {
-            sh label: '', script: "docker login -u docker797 -p ${password}"
-    }
-        sh label: '', script: 'docker push docker797/deployimage:${TAG}'
-    }
+                script{
+                    sh '''
+                    echo 'building with maven'
+                    mvn clean install
+                    '''
+                }
+            }
+        }
+        stage('Test') {
+            steps {
+                withsonarQubeEnv(){
+                sh 'mvn sonar:sonar'
+                }
+            }
+            post {
+                always {
+                    junit 'target/*.xml'
+                }
+            }
+        }
+      
+          stage('Build Docker image and push'){
+            steps{
+               withCredentials([])
+               sh docker build -t images:$BUILDNUM .
+               sh docker push $BUILDimage:$BUILDNUM
         }
     }
-}
-
-def getdockertag(){
-    def tag = sh script: 'git rev-parse HEAD', returnStdout = true
-    return tag
 }
