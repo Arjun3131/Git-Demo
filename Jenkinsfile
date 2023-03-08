@@ -1,9 +1,6 @@
 pipeline {
     
     agent any
-    enironment{
-        PATH = "/usr/bin/mvn:$PATH" 
-    }
     
     stages {
         
