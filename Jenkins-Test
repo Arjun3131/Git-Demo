@@ -1,9 +1,6 @@
 pipeline {
     
     agent any
-    enironment{
-        PATH = "/usr/bin/mvn:$PATH" 
-    }
     
     stages {
         
@@ -20,7 +17,7 @@ pipeline {
                 script{
                     sh '''
                     echo 'building with maven'
-                    mvn clean install --file *.pom
+                    mvn clean install
                     '''
                 }
             }
