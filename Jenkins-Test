@@ -17,6 +17,7 @@ pipeline {
                 script{
                     sh '''
                     echo 'building with maven'
+                    mvn -f /home/ubuntu/Git-Demo/pom.xml 
                     mvn clean install
                     '''
                 }
