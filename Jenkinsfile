@@ -21,6 +21,16 @@ pipeline {
                 }
             }
         }
+        stage('sonar Analysis'){
+            steps{
+                script{
+                    sh '''
+                    echo 'building with maven'
+                    mvn sonar:sonar 
+                    '''
+                }   
+            }
+        }
         stage('Build docker image'){
             steps{
                 script{
